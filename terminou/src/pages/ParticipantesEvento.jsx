@@ -19,7 +19,7 @@ const ParticipantesEvento = () => {
       setEvento(eventoResponse.data);
       
       const presencasResponse = await PresencaService.findAll();
-      const participantesEvento = presencasResponse.data.filter(p => p.evento?.id == id && p.statusPresenca === 'CONFIRMADO');
+      const participantesEvento = presencasResponse.data.filter(p => p.evento?.id == id && p.statusPresenca === 'ATIVO');
       setParticipantes(participantesEvento);
     } catch (error) {
       console.error('Erro ao carregar dados:', error);

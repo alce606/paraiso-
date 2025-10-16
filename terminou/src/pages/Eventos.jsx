@@ -94,8 +94,8 @@ const Eventos = () => {
                     </Link>
                   </>
                 )}
-                <Link to={`/eventos/detalhes/${evento.id}`} className="btn btn-primary" style={{ flex: nivelAcesso === 'ADMIN' ? 1 : 2, padding: '8px', textAlign: 'center', textDecoration: 'none', minWidth: '100px' }}>
-                  Ver Detalhes
+                <Link to={`/eventos/descricao/${evento.id}`} className="btn btn-primary" style={{ flex: nivelAcesso === 'ADMIN' ? 1 : 2, padding: '8px', textAlign: 'center', textDecoration: 'none', minWidth: '100px' }}>
+                  Ver Descrição
                 </Link>
               </div>
             </div>

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/models/evento_model.dart';
 import 'detalhes_evento_screen.dart';
+import 'descricao_evento_screen.dart';
 import 'ingresso_screen.dart';
 import '../services/api_service.dart';
 
@@ -223,7 +224,7 @@ class _EventosAtivosScreenState extends State<EventosAtivosScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    DetalhesEventoScreen(evento: evento),
+                                    DescricaoEventoScreen(evento: evento),
                               ),
                             );
                           },
@@ -366,51 +367,36 @@ class _EventosAtivosScreenState extends State<EventosAtivosScreen> {
                                     ),
                                   ],
                                   const SizedBox(height: 16),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 8,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: primaryColor,
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          (evento['precoEntrada'] ?? 0) == 0
-                                              ? 'GRATUITO'
-                                              : 'R\$ ${(evento['precoEntrada'] ?? 0).toStringAsFixed(2)}',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: primaryColor,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      (evento['precoEntrada'] ?? 0) == 0
+                                          ? 'GRATUITO'
+                                          : 'R\$ ${(evento['precoEntrada'] ?? 0).toStringAsFixed(2)}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      ElevatedButton(
-                                        onPressed: () =>
-                                            _participarEvento(evento),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: primaryColor,
-                                          foregroundColor: Colors.white,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 24,
-                                            vertical: 12,
-                                          ),
-                                        ),
-                                        child: const Text('Participar'),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  const Center(
+                                    child: Text(
+                                      'Toque para ver detalhes e participar',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                        fontStyle: FontStyle.italic,
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ],
                               ),

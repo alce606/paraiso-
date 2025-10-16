@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/evento_model.dart';
 import '../services/favoritos_service.dart';
+import '../config/app_config.dart';
 import 'meus_eventos_screen.dart';
 
 class IngressoScreen extends StatelessWidget {
@@ -27,30 +28,46 @@ class IngressoScreen extends StatelessWidget {
     required int eventoId,
     String statusPresenca = "confirmado",
   }) async {
-    final url = Uri.parse(
-      'http://localhost:8080/presenca/save',
-    ); // Ajuste a URL
+    try {
+      final url = Uri.parse('${AppConfig.baseUrl}/presenca/save');
 
-    final body = jsonEncode({
-      'codigo': codigo,
-      'usuario': {'id': usuarioId},
-      'evento': {'id': eventoId},
-      'statusPresenca': statusPresenca,
-      'dataCadastro': DateTime.now().toIso8601String(),
-    });
+      final body = jsonEncode({
+        'codigo': codigo,
+        'usuario': {'id': usuarioId},
+        'evento': {'id': eventoId},
+        'statusPresenca': statusPresenca,
+      });
 
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: body,
-    );
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      ).timeout(const Duration(seconds: 10));
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      print('Erro ao marcar presença: ${response.body}');
+      return response.statusCode == 200;
+    } catch (e) {
       return false;
     }
+  }
+
+  Future<bool> _verificarPresencaExistente(int usuarioId, int eventoId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('${AppConfig.baseUrl}/presenca/findAll'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 5));
+
+      if (response.statusCode == 200) {
+        final presencas = jsonDecode(response.body) as List;
+        return presencas.any((presenca) => 
+          presenca['usuario']?['id'] == usuarioId && 
+          presenca['evento']?['id'] == eventoId
+        );
+      }
+    } catch (e) {
+      print('Erro ao verificar presença existente: $e');
+    }
+    return false;
   }
 
   @override
@@ -60,7 +77,7 @@ class IngressoScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Seu Ingresso'),
+        title: const Text('Presença Confirmada!'),
         backgroundColor: const Color(0xFFDC143C),
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
@@ -191,6 +208,9 @@ class IngressoScreen extends StatelessWidget {
                       final prefs = await SharedPreferences.getInstance();
 
                       final usuarioId = prefs.getInt('userId');
+                      print('=== DEBUG USUARIO ===');
+                      print('Usuario ID: $usuarioId');
+                      print('Todas as chaves: ${prefs.getKeys()}');
 
                       if (usuarioId == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -210,6 +230,18 @@ class IngressoScreen extends StatelessWidget {
                         );
                         return;
                       }
+                      // Verificar duplicata primeiro
+                      final jaConfirmado = await _verificarPresencaExistente(usuarioId, eventoId);
+                      if (jaConfirmado) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Você já confirmou presença neste evento!'),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                        return;
+                      }
+
                       final sucesso = await marcarPresenca(
                         codigo: codigoIngresso,
                         usuarioId: usuarioId,
@@ -219,15 +251,15 @@ class IngressoScreen extends StatelessWidget {
                       if (sucesso) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text(
-                              'Presença confirmada e ingresso salvo!',
-                            ),
+                            content: Text('Presença confirmada e salva no banco de dados!'),
+                            backgroundColor: Colors.green,
                           ),
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Falha ao confirmar presença.'),
+                            content: Text('Erro ao confirmar presença. Tente novamente.'),
+                            backgroundColor: Colors.red,
                           ),
                         );
                       }

@@ -24,6 +24,7 @@ import ChatSuporte from './pages/ChatSuporte';
 import GerenciarSuporte from './pages/GerenciarSuporte';
 import ConfiguracoesSite from './pages/ConfiguracoesSite';
 import ParticipantesEvento from './pages/ParticipantesEvento';
+import DescricaoEvento from './pages/DescricaoEvento';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -46,6 +47,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/eventos/detalhes/:id" element={<DetalhesEvento />} />
+          <Route path="/eventos/descricao/:id" element={<DescricaoEvento />} />
           <Route path="/eventos/editar/:id" element={
             <ProtectedRoute adminOnly={true}>
               <EditarEvento />

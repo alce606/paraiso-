@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,7 +36,6 @@ class _MeusEventosScreenState extends State<MeusEventosScreen> with SingleTicker
       final prefs = await SharedPreferences.getInstance();
       final usuarioId = prefs.getInt('userId');
       
-      // Carrega eventos confirmados (presenças do usuário)
       if (usuarioId != null) {
         final presencas = await ApiService.getPresencasUsuario(usuarioId);
         
@@ -49,7 +49,7 @@ class _MeusEventosScreenState extends State<MeusEventosScreen> with SingleTicker
             'local': presenca['evento']?['localEvento'] ?? presenca['localEvento'] ?? '',
             'periodo': presenca['evento']?['periodo'] ?? presenca['periodo'] ?? '',
             'preco': presenca['evento']?['precoEntrada'] ?? presenca['precoEntrada'] ?? 0.0,
-            'codigo': presenca['codigo'] ?? '',
+            'codigo': presenca['codigo'] ?? 'CG${presenca['id'].toString().padLeft(6, '0')}',
           });
         }
         
@@ -58,7 +58,6 @@ class _MeusEventosScreenState extends State<MeusEventosScreen> with SingleTicker
         });
       }
       
-      // Carrega TODOS os eventos para avaliação
       await _carregarTodosEventos();
       
     } catch (e) {
@@ -69,22 +68,40 @@ class _MeusEventosScreenState extends State<MeusEventosScreen> with SingleTicker
     }
   }
 
-  Future<void> _carregarTodosEventos() async {
+  Future<List<Map<String, dynamic>>> _getTodosEventosData() async {
     try {
       final response = await ApiService.getTodosEventos();
+      return response.map<Map<String, dynamic>>((evento) => {
+        'id': evento['id'],
+        'nome': evento['nome'] ?? 'Evento',
+        'descricao': evento['descricao'] ?? '',
+        'dataEvento': evento['dataEvento'] ?? '',
+        'localEvento': evento['localEvento'] ?? '',
+        'periodo': evento['periodo'] ?? '',
+        'precoEntrada': evento['precoEntrada'] ?? 0.0,
+      }).toList();
+    } catch (e) {
+      print('Erro ao carregar dados dos eventos: $e');
+      return [];
+    }
+  }
+
+  Future<void> _carregarTodosEventos() async {
+    try {
+      final eventosData = await _getTodosEventosData();
       
       List<Map<String, dynamic>> eventos = [];
-      for (var evento in response) {
+      for (var evento in eventosData) {
         eventos.add({
           'id': evento['id'],
-          'nome': evento['nome'] ?? 'Evento',
-          'descricao': evento['descricao'] ?? '',
-          'data': evento['dataEvento'] ?? '',
-          'local': evento['localEvento'] ?? '',
-          'periodo': evento['periodo'] ?? '',
-          'preco': evento['precoEntrada'] ?? 0.0,
-          'avaliacao': 0, // Avaliação padrão
-          'comentario': '', // Comentário padrão
+          'nome': evento['nome'],
+          'descricao': evento['descricao'],
+          'data': evento['dataEvento'],
+          'local': evento['localEvento'],
+          'periodo': evento['periodo'],
+          'preco': evento['precoEntrada'],
+          'avaliacao': 0,
+          'comentario': '',
         });
       }
       
@@ -109,7 +126,7 @@ class _MeusEventosScreenState extends State<MeusEventosScreen> with SingleTicker
           });
           
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Presença cancelada com sucesso!')),
+            const SnackBar(content: Text('Presença cancelada no banco de dados!')),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -207,8 +224,11 @@ class _MeusEventosScreenState extends State<MeusEventosScreen> with SingleTicker
                     children: [
                       const Icon(Icons.qr_code, color: Color(0xFFDC143C)),
                       const SizedBox(width: 8),
-                      Text('Código: ${evento['codigo']}', 
-                           style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Expanded(
+                        child: Text('Código: ${evento['codigo']}', 
+                             style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+
                     ],
                   ),
                   const SizedBox(height: 8),

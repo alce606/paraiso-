@@ -165,18 +165,12 @@ static Future<bool> atualizarUsuario(int id, Map<String, dynamic> dadosAtualizad
 
  static Future<bool> deletarPresencaPorId(int presencaId) async {
    try {
-     print('Deletando presença ID: $presencaId');
-     
      final response = await http.delete(
-       Uri.parse('http://localhost:8080/presenca/delete/$presencaId')
+       Uri.parse('$baseUrl/presenca/$presencaId')
      );
-     
-     print('Status Code: ${response.statusCode}');
-     print('Response: ${response.body}');
      
      return response.statusCode == 200;
    } catch (e) {
-     print('Erro ao deletar presença: $e');
      return false;
    }
  }
