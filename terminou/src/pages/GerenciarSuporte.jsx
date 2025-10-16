@@ -20,6 +20,7 @@ const GerenciarSuporte = () => {
   const loadSuportes = async () => {
     try {
       const response = await MensagemService.findAll();
+      console.log('Dados do suporte:', response.data);
       setSuportes(response.data);
       setFilteredSuportes(response.data);
     } catch (error) {
@@ -196,10 +197,10 @@ const GerenciarSuporte = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
                 <div>
                   <div style={{ marginBottom: '8px' }}>
-                    <strong style={{ color: '#dc143c' }}>Nome:</strong> {suporte.nome}
+                    <strong style={{ color: '#dc143c' }}>Nome:</strong> {suporte.nome || suporte.usuario?.nome || 'Nome não disponível'}
                   </div>
                   <div style={{ marginBottom: '8px' }}>
-                    <strong style={{ color: '#dc143c' }}>Email:</strong> {suporte.email}
+                    <strong style={{ color: '#dc143c' }}>Email:</strong> {suporte.email || suporte.usuario?.email || 'Email não disponível'}
                   </div>
                   <div style={{ marginBottom: '8px' }}>
                     <strong style={{ color: '#dc143c' }}>Data:</strong> {new Date(suporte.dataMensagem).toLocaleDateString('pt-BR')}

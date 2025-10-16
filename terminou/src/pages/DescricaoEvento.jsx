@@ -105,18 +105,19 @@ const DescricaoEvento = () => {
         )}
 
         <div style={{ textAlign: 'center', marginTop: '30px' }}>
-          <Link 
-            to={`/eventos/participar/${evento.id}`} 
+          <button 
+            onClick={() => alert('Esta função está disponível apenas no aplicativo móvel. Baixe o app para confirmar sua presença!')}
             className="btn btn-primary" 
             style={{ 
               padding: '15px 30px', 
               fontSize: '1.1rem',
               background: '#dc143c',
-              border: 'none'
+              border: 'none',
+              cursor: 'pointer'
             }}
           >
             🎯 Participar do Evento
-          </Link>
+          </button>
         </div>
       </div>
     </div>

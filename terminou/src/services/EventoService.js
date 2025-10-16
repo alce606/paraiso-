@@ -79,7 +79,7 @@ const reativar = (id) => {
 };
 
 const deletar = (id) => {
-  return http.mainInstance.delete(API_URL + `deletar/${id}`);
+  return http.mainInstance.delete(API_URL + `delete/${id}`);
 };
 
 const confirmarPresenca = (eventoId, usuarioId) => {

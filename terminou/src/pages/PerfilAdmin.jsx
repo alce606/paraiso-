@@ -59,7 +59,7 @@ const PerfilAdmin = () => {
               }}
             />
           ) : (
-            <span style={{ fontSize: '4rem' }}>👨💼</span>
+            <span style={{ fontSize: '4rem' }}>👑</span>
           )}
           <h1 style={{ color: '#dc143c', marginTop: '10px' }}>Perfil do Administrador</h1>
         </div>
@@ -110,25 +110,8 @@ const PerfilAdmin = () => {
               fontSize: '16px'
             }}
           >
-            ⚙️ Painel de Controle
+             Painel de Controle
           </button>
-          
-          <button
-            onClick={() => navigate('/admin/editar-perfil')}
-            style={{
-              padding: '12px 24px',
-              backgroundColor: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontSize: '16px'
-            }}
-          >
-            ✏️ Editar Perfil
-          </button>
-          
-
           
           <button
             onClick={handleLogout}
@@ -142,7 +125,7 @@ const PerfilAdmin = () => {
               fontSize: '16px'
             }}
           >
-            🚪 Sair
+             Sair
           </button>
         </div>
       </div>

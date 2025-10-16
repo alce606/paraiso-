@@ -14,15 +14,11 @@ const EditarEvento = () => {
     nome: "",
     descricao: "",
     localEvento: "",
-    cep: "",
-    numero: "",
-    complemento: "",
     dataEvento: "",
     horaEvento: "",
     periodo: "",
     foto: null,
     precoEntrada: 0,
-    arrecadacao: 0,
     totalParticipantes: 0,
     dataCadastro: "",
     usuario: {
@@ -183,35 +179,7 @@ const EditarEvento = () => {
                 />
               </div>
 
-              <div className="form-group">
-                <label>CEP</label>
-                <input
-                  type="text"
-                  name="cep"
-                  value={evento.cep}
-                  onChange={handleChange}
-                />
-              </div>
 
-              <div className="form-group">
-                <label>Número</label>
-                <input
-                  type="text"
-                  name="numero"
-                  value={evento.numero}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Complemento</label>
-                <input
-                  type="text"
-                  name="complemento"
-                  value={evento.complemento}
-                  onChange={handleChange}
-                />
-              </div>
             </div>
 
             <div>
@@ -258,16 +226,7 @@ const EditarEvento = () => {
                 />
               </div>
 
-              <div className="form-group">
-                <label>Meta de Arrecadação</label>
-                <input
-                  type="number"
-                  name="arrecadacao"
-                  value={evento.arrecadacao}
-                  onChange={handleChange}
-                  step="0.01"
-                />
-              </div>
+
 
               <div className="form-group">
                 <label>Total de Participantes</label>
