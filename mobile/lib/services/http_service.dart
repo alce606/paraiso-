@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
+
 class HttpService {
   static final HttpService _instance = HttpService._internal();
   factory HttpService() => _instance;

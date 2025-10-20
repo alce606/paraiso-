@@ -12,8 +12,22 @@ const findById = (id) => {
     return http.mainInstance.get(`${API_URL}findById/${id}`);
 };
 
-const save = (mensagem) => {
-    return http.mainInstance.post(`${API_URL}save`, mensagem);
+const save = async (mensagem) => {
+    try {
+        return await http.mainInstance.post(`${API_URL}save`, mensagem);
+    } catch (error) {
+        console.error('Erro ao salvar mensagem:', error.response?.data || error.message);
+        throw error;
+    }
+};
+
+const responder = async (id, mensagem) => {
+    try {
+        return await http.mainInstance.put(`${API_URL}responder/${id}`, mensagem);
+    } catch (error) {
+        console.error('Erro ao salvar mensagem:', error.response?.data || error.message);
+        throw error;
+    }
 };
 
 const deleteById = (id) => {
@@ -24,6 +38,7 @@ const MensagemService = {
     findAll,
     findById,
     save,
+    responder,
     deleteById
 };
 

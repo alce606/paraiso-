@@ -61,6 +61,15 @@ const GerenciarSuporte = () => {
     }
   };
 
+
+  const handleResponse = (suporte) => {
+    setSelectedSupport(suporte);
+    const responses = JSON.parse(localStorage.getItem('adminResponses') || '{}');
+    setResponseText(responses[suporte.id] || '');
+    setShowResponseModal(true);
+  };
+
+  
   const handleDelete = async (id) => {
     if (confirm('Tem certeza que deseja deletar este suporte?')) {
       try {
@@ -80,19 +89,13 @@ const GerenciarSuporte = () => {
     }
   };
 
-  const handleResponse = (suporte) => {
-    setSelectedSupport(suporte);
-    const responses = JSON.parse(localStorage.getItem('adminResponses') || '{}');
-    setResponseText(responses[suporte.id] || '');
-    setShowResponseModal(true);
-  };
-
   const sendResponse = async () => {
     if (responseText.trim()) {
       try {
         // Atualizar status para respondido
         const updatedSupport = {
           ...selectedSupport,
+          resposta: responseText,
           statusMensagem: 'respondido'
         };
         
@@ -101,7 +104,7 @@ const GerenciarSuporte = () => {
         responses[selectedSupport.id] = responseText;
         localStorage.setItem('adminResponses', JSON.stringify(responses));
         
-        await MensagemService.save(updatedSupport);
+        await MensagemService.responder(selectedSupport.id, updatedSupport);
         loadSuportes();
         
         alert(`Resposta enviada para ${selectedSupport.email}!`);

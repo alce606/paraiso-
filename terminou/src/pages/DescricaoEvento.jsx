@@ -116,7 +116,7 @@ const DescricaoEvento = () => {
               cursor: 'pointer'
             }}
           >
-            🎯 Participar do Evento
+            Participar do Evento
           </button>
         </div>
       </div>
