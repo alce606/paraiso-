@@ -21,6 +21,7 @@ import 'providers/auth_provider.dart';
 import 'providers/evento_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/evento_provider.dart';
+import 'widgets/auth_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -96,21 +97,39 @@ class MyApp extends StatelessWidget {
           ),
         ),
         initialRoute: '/',
-        routes: {
-          '/': (context) => const LoginScreen(),
-          '/signup': (context) => const SignupScreen(),
-          '/telaInicial': (context) => const DashboardScreen(),
-          '/perfil': (context) => const PerfilScreen(),
-          '/configuracoes': (context) => const ConfiguracoesScreen(),
-          '/politica-privacidade': (context) => const PoliticaPrivacidadeScreen(),
-          '/termos-uso': (context) => const TermosUsoScreen(),
-          '/meus-eventos': (context) => const MeusEventosScreen(),
-          '/eventos-ativos': (context) => const EventosAtivosScreen(),
-          '/favoritos': (context) => const FavoritosScreen(),
-          '/historico': (context) => const HistoricoScreen(),
-          '/suporte': (context) => const SuporteScreen(),
-          '/feedback': (context) => const FeedbackScreen(),
-          '/sobre-nos': (context) => const SobreNosScreen(),
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case '/':
+              return MaterialPageRoute(builder: (context) => const LoginScreen());
+            case '/signup':
+              return MaterialPageRoute(builder: (context) => const SignupScreen());
+            case '/telaInicial':
+              return MaterialPageRoute(builder: (context) => const AuthWrapper(child: DashboardScreen()));
+            case '/perfil':
+              return MaterialPageRoute(builder: (context) => const AuthWrapper(child: PerfilScreen()));
+            case '/configuracoes':
+              return MaterialPageRoute(builder: (context) => const AuthWrapper(child: ConfiguracoesScreen()));
+            case '/politica-privacidade':
+              return MaterialPageRoute(builder: (context) => const PoliticaPrivacidadeScreen());
+            case '/termos-uso':
+              return MaterialPageRoute(builder: (context) => const TermosUsoScreen());
+            case '/meus-eventos':
+              return MaterialPageRoute(builder: (context) => const AuthWrapper(child: MeusEventosScreen()));
+            case '/eventos-ativos':
+              return MaterialPageRoute(builder: (context) => const AuthWrapper(child: EventosAtivosScreen()));
+            case '/favoritos':
+              return MaterialPageRoute(builder: (context) => const AuthWrapper(child: FavoritosScreen()));
+            case '/historico':
+              return MaterialPageRoute(builder: (context) => const AuthWrapper(child: HistoricoScreen()));
+            case '/suporte':
+              return MaterialPageRoute(builder: (context) => const SuporteScreen());
+            case '/feedback':
+              return MaterialPageRoute(builder: (context) => const AuthWrapper(child: FeedbackScreen()));
+            case '/sobre-nos':
+              return MaterialPageRoute(builder: (context) => const SobreNosScreen());
+            default:
+              return MaterialPageRoute(builder: (context) => const LoginScreen());
+          }
         },
           );
         },

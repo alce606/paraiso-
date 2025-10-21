@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import UsuarioService from '../services/UsuarioService';
 
 const Header = () => {
+  const navigate = useNavigate();
   const [userType, setUserType] = useState(null);
   const [userName, setUserName] = useState('');
   const [adminName, setAdminName] = useState('');
@@ -9,6 +11,11 @@ const Header = () => {
     nomesite: 'Coração Generoso',
     registroUsuarios: true
   });
+
+  const handleLogout = () => {
+    UsuarioService.logout();
+    navigate('/');
+  };
 
   useEffect(() => {
     const checkUserType = () => {
@@ -102,11 +109,7 @@ const Header = () => {
                   👤 {userName || 'Meu Perfil'}
                 </Link>
                 <button 
-                  onClick={() => {
-                    localStorage.removeItem('userType');
-                    localStorage.removeItem('userToken');
-                    window.dispatchEvent(new Event('userTypeChanged'));
-                  }}
+                  onClick={handleLogout}
                   className="btn btn-primary"
                 >
                   Sair
@@ -121,11 +124,7 @@ const Header = () => {
                   ⚙️ Gerenciar
                 </Link>
                 <button 
-                  onClick={() => {
-                    localStorage.removeItem('userType');
-                    localStorage.removeItem('adminToken');
-                    window.dispatchEvent(new Event('userTypeChanged'));
-                  }}
+                  onClick={handleLogout}
                   className="btn btn-primary"
                 >
                   Sair

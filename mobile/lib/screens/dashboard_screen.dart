@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/global_search_bar.dart';
 import '../widgets/info_section_widget.dart';
 import '../widgets/dashboard_eventos_vitrine.dart';
@@ -345,8 +346,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 leading: const Icon(Icons.logout, color: Colors.red),
                 title: const Text('Sair', style: TextStyle(color: Colors.red)),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
+                  // Limpar dados de sessão
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  await prefs.remove('userId');
                   Navigator.pushReplacementNamed(context, '/');
                 },
               ),

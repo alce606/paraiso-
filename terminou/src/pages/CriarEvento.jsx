@@ -7,8 +7,17 @@ import CepModal from "../components/Cep/CepModal";
 import UsuarioService from '../services/UsuarioService';
 
 const CriarEvento = () => {
-  const usuario = UsuarioService.getCurrentUser();
   const navigate = useNavigate();
+  const [usuario, setUsuario] = useState(null);
+  
+  useEffect(() => {
+    const currentUser = UsuarioService.getCurrentUser();
+    if (!currentUser || !currentUser.id) {
+      navigate('/login-admin');
+      return;
+    }
+    setUsuario(currentUser);
+  }, [navigate]);
   const _dbRecords = useRef(true);
   const [categorias, setCategorias] = useState([]);
 
@@ -82,6 +91,11 @@ const CriarEvento = () => {
     setMessage("");
     setSuccessful(false);
 
+    if (!usuario || !usuario.id) {
+      setMessage('Erro: Usuário não encontrado. Faça login novamente.');
+      setSuccessful(false);
+      return;
+    }
 
     EventoService.create(file, formData, usuario).then(
       (response) => {
@@ -101,6 +115,17 @@ const CriarEvento = () => {
       }
     );
   };
+
+  if (!usuario) {
+    return (
+      <div className="container">
+        <div className="card" style={{ textAlign: 'center', padding: '50px' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '20px' }}>⏳</div>
+          <h2>Verificando permissões...</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container">

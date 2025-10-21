@@ -39,6 +39,12 @@ const signin = async (email, senha) => {
 
 const logout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("userType");
+    localStorage.removeItem("nivelAcesso");
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminUser");
+    // Dispara evento para atualizar o Header
+    window.dispatchEvent(new Event('userTypeChanged'));
 };
 
 const getCurrentUser = () => {

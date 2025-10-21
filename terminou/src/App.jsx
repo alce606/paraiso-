@@ -40,14 +40,26 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/sobre" element={<SobreNos />} />
-          <Route path="/eventos" element={<Eventos />} />
+          <Route path="/eventos" element={
+            <ProtectedRoute>
+              <Eventos />
+            </ProtectedRoute>
+          } />
           <Route path="/eventos/criar" element={
             <ProtectedRoute adminOnly={true}>
               <CriarEvento />
             </ProtectedRoute>
           } />
-          <Route path="/eventos/detalhes/:id" element={<DetalhesEvento />} />
-          <Route path="/eventos/descricao/:id" element={<DescricaoEvento />} />
+          <Route path="/eventos/detalhes/:id" element={
+            <ProtectedRoute>
+              <DetalhesEvento />
+            </ProtectedRoute>
+          } />
+          <Route path="/eventos/descricao/:id" element={
+            <ProtectedRoute>
+              <DescricaoEvento />
+            </ProtectedRoute>
+          } />
           <Route path="/eventos/editar/:id" element={
             <ProtectedRoute adminOnly={true}>
               <EditarEvento />
