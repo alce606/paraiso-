@@ -211,17 +211,9 @@ const DetalhesEvento = () => {
 
             <div style={{ background: '#fff0f0', padding: '20px', borderRadius: '10px', marginBottom: '20px' }}>
               <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                <span style={{ fontSize: '2rem', display: 'block' }}>👥</span>
-                <h4 style={{ color: '#dc143c', margin: '10px 0 5px' }}>{evento.totalParticipantes}</h4>
-                <p style={{ color: '#666', margin: '0 0 15px 0' }}>Participantes</p>
-                
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '15px' }}>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '1.5rem', color: '#28a745' }}>✓</div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#dc143c' }}>{totalPresencas}</div>
-                    <div style={{ fontSize: '0.9rem', color: '#666' }}>Presenças Confirmadas</div>
-                  </div>
-                </div>
+                <span style={{ fontSize: '2rem', display: 'block' }}>💵</span>
+                <h4 style={{ color: '#dc143c', margin: '10px 0 5px' }}>R$ {evento.precoEntrada}</h4>
+                <p style={{ color: '#666', margin: '0' }}>Valor da Entrada</p>
               </div>
             </div>
 

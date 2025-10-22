@@ -95,7 +95,6 @@ const _alterar = (file, id, data) => {
 const alterar = async (id, data) => {
     const formData = new FormData();
     formData.append('nome', data.nome);
-    formData.append('email', data.email);
     formData.append('nivelAcesso', data.nivelAcesso);
     formData.append('statusUsuario', data.statusUsuario);
     
@@ -121,8 +120,10 @@ const reativar = (id) => {
     return http.mainInstance.put(API_URL + `reativar/${id}`);
 };
 
-const alterarSenha = (id, data) => {
-    return http.mainInstance.put(API_URL + `alterarSenha/${id}`, data);
+const alterarSenha = (email, novaSenha) => {
+    return http.mainInstance.put(API_URL + `alterarSenha/${email}`, {
+        senha: novaSenha
+    });
 };
 
 const findByNome = nome => {

@@ -14,33 +14,9 @@ const EditarUsuario = () => {
     statusUsuario: 'ATIVO'
   });
   const [foto, setFoto] = useState(null);
-  const [novaSenha, setNovaSenha] = useState('');
-  const [alterarSenha, setAlterarSenha] = useState(false);
 
-  const validatePassword = (senha) => {
-    const minLength = 8;
-    const hasUpperCase = /[A-Z]/.test(senha);
-    const hasLowerCase = /[a-z]/.test(senha);
-    const hasNumbers = /\d/.test(senha);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
-    
-    if (senha.length < minLength) {
-      return 'A senha deve ter pelo menos 8 caracteres.';
-    }
-    if (!hasUpperCase) {
-      return 'A senha deve conter pelo menos uma letra maiúscula.';
-    }
-    if (!hasLowerCase) {
-      return 'A senha deve conter pelo menos uma letra minúscula.';
-    }
-    if (!hasNumbers) {
-      return 'A senha deve conter pelo menos um número.';
-    }
-    if (!hasSpecialChar) {
-      return 'A senha deve conter pelo menos um caractere especial (!@#$%^&*(),.?":{}|<>).';
-    }
-    return null;
-  };
+
+
 
   useEffect(() => {
     carregarUsuario();
@@ -85,30 +61,20 @@ const EditarUsuario = () => {
       return;
     }
     
-    if (alterarSenha) {
-      if (!novaSenha.trim()) {
-        alert('Nova senha é obrigatória');
-        return;
-      }
-      
-      const passwordError = validatePassword(novaSenha);
-      if (passwordError) {
-        alert(passwordError);
-        return;
-      }
-    }
+
     
     try {
-      const dataToSend = { ...formData };
+      const dataToSend = {
+        nome: formData.nome,
+        nivelAcesso: formData.nivelAcesso,
+        statusUsuario: formData.statusUsuario
+      };
       if (foto) {
         dataToSend.foto = foto;
       }
       
       await UsuarioService.alterar(id, dataToSend);
-      
-      if (alterarSenha && novaSenha) {
-        await UsuarioService.alterarSenha(id, { senha: novaSenha });
-      }
+
       
       alert('Usuário alterado com sucesso!');
       navigate('/admin/usuarios');
@@ -193,7 +159,6 @@ const EditarUsuario = () => {
               >
                 <option value="ATIVO">Ativo</option>
                 <option value="INATIVO">Inativo</option>
-                <option value="TROCAR_SENHA">Trocar Senha</option>
               </select>
             </div>
 
@@ -206,33 +171,7 @@ const EditarUsuario = () => {
               />
             </div>
 
-            <div className="form-group">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={alterarSenha}
-                  onChange={(e) => setAlterarSenha(e.target.checked)}
-                  style={{ marginRight: '8px' }}
-                />
-                Alterar senha
-              </label>
-            </div>
 
-            {alterarSenha && (
-              <div className="form-group">
-                <label>Nova Senha</label>
-                <input
-                  type="password"
-                  value={novaSenha}
-                  onChange={(e) => setNovaSenha(e.target.value)}
-                  placeholder="Digite a nova senha"
-                  required={alterarSenha}
-                />
-                <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
-                  Mínimo 8 caracteres, incluindo: maiúscula, minúscula, número e caractere especial
-                </small>
-              </div>
-            )}
 
             <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
               <button 

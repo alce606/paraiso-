@@ -96,8 +96,14 @@ const PerfilUsuario = () => {
       const currentUser = UsuarioService.getCurrentUser();
       await UsuarioService._alterar(foto, currentUser.id, userData);
       
-      if (alterarSenha && novaSenha) {
-        await UsuarioService.alterarSenha(currentUser.id, { senha: novaSenha });
+      if (alterarSenha && novaSenha.trim()) {
+        try {
+          await UsuarioService.alterarSenha(currentUser.email, novaSenha.trim());
+        } catch (error) {
+          console.error('Erro ao alterar a senha no perfil usuario:', error);
+          alert('Erro ao alterar senha. Verifique se a senha atende aos requisitos.');
+          return;
+        }
       }
       
       // Atualiza o localStorage com os novos dados

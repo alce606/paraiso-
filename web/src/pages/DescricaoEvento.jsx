@@ -58,6 +58,8 @@ const DescricaoEvento = () => {
               <p><strong>📍 Local:</strong> {evento.localEvento}</p>
               <p><strong>🏢 Endereço:</strong> {evento.complemento}</p>
               <p><strong>📮 CEP:</strong> {evento.cep}</p>
+              <p><strong>👥 Participantes:</strong> {evento.totalParticipantes || 0}</p>
+              <p><strong>🏷️ Categoria:</strong> {evento.categoria?.nome}</p>
             </div>
           </div>
 
@@ -70,8 +72,6 @@ const DescricaoEvento = () => {
                   ` R$ ${evento.precoEntrada?.toFixed(2)}`
                 }
               </p>
-              <p><strong>👥 Participantes:</strong> {evento.totalParticipantes || 0}</p>
-              <p><strong>🏷️ Categoria:</strong> {evento.categoria?.nome}</p>
             </div>
           </div>
         </div>
@@ -104,21 +104,7 @@ const DescricaoEvento = () => {
           </div>
         )}
 
-        <div style={{ textAlign: 'center', marginTop: '30px' }}>
-          <button 
-            onClick={() => alert('Esta função está disponível apenas no aplicativo móvel. Baixe o app para confirmar sua presença!')}
-            className="btn btn-primary" 
-            style={{ 
-              padding: '15px 30px', 
-              fontSize: '1.1rem',
-              background: '#dc143c',
-              border: 'none',
-              cursor: 'pointer'
-            }}
-          >
-            Participar do Evento
-          </button>
-        </div>
+
       </div>
     </div>
   );

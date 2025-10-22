@@ -161,8 +161,7 @@ const GerenciarUsuarios = () => {
                         padding: '4px 8px',
                         borderRadius: '12px',
                         fontSize: '0.8rem',
-                        background: usuario.statusUsuario === 'ATIVO' ? '#28a745' : 
-                                   usuario.statusUsuario === 'INATIVO' ? '#dc3545' : '#ffc107',
+                        background: usuario.statusUsuario === 'ATIVO' ? '#28a745' : '#dc3545',
                         color: 'white'
                       }}>
                         {usuario.statusUsuario}
