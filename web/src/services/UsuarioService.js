@@ -93,9 +93,18 @@ const _alterar = (file, id, data) => {
 };
 
 const alterar = async (id, data) => {
-    const response = await http.mainInstance.put(API_URL + `alterar/${id}`, data);
+    const formData = new FormData();
+    formData.append('nome', data.nome);
+    formData.append('email', data.email);
+    formData.append('nivelAcesso', data.nivelAcesso);
+    formData.append('statusUsuario', data.statusUsuario);
+    
+    if (data.foto) {
+        formData.append('foto', data.foto);
+    }
+    
+    const response = await http.multipartInstance.put(API_URL + `alterar/${id}`, formData);
 
-    // Atualiza localStorage se for o usuário logado
     const currentUser = getCurrentUser();
     if (currentUser && currentUser.id === id) {
         updateCurrentUser({ ...currentUser, ...response.data });
@@ -112,11 +121,8 @@ const reativar = (id) => {
     return http.mainInstance.put(API_URL + `reativar/${id}`);
 };
 
-const alterarSenha = (email, novaSenha) => {
-    const formData = new FormData();
-    formData.append('senha', novaSenha);
-
-    return http.mainInstance.put(API_URL + `alterarSenha/${email}`, formData);
+const alterarSenha = (id, data) => {
+    return http.mainInstance.put(API_URL + `alterarSenha/${id}`, data);
 };
 
 const findByNome = nome => {

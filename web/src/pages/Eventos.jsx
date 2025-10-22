@@ -8,16 +8,30 @@ const Eventos = () => {
   const _dbRecords = useRef(true);
   const nivelAcesso = localStorage.getItem('nivelAcesso');
   const [eventos, setEventos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const getEventos = () => {
+    setLoading(true);
+    setError(null);
     EventoService.findAll().then(
       (response) => {
-        const categorias = response.data;
-        setEventos(categorias);
+        // Verifica se response.data é um array
+        if (Array.isArray(response.data)) {
+          setEventos(response.data);
+        } else {
+          console.error('Resposta inválida do servidor:', response.data);
+          setError('Formato de resposta inválido do servidor.');
+          setEventos([]);
+        }
       }
     ).catch((error) => {
-      console.log(error);
-    })
+      console.error('Erro ao carregar eventos:', error);
+      setError('Erro ao carregar eventos. Verifique se o servidor está rodando.');
+      setEventos([]);
+    }).finally(() => {
+      setLoading(false);
+    });
   }
 
   useEffect(() => {
@@ -102,7 +116,25 @@ const Eventos = () => {
           ))}
         </div>
 
-        {eventos.length === 0 && (
+        {loading && (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+            <span style={{ fontSize: '3rem', display: 'block', marginBottom: '20px' }}>⏳</span>
+            <h3>Carregando eventos...</h3>
+          </div>
+        )}
+
+        {error && (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#dc3545' }}>
+            <span style={{ fontSize: '3rem', display: 'block', marginBottom: '20px' }}>❌</span>
+            <h3>Erro ao carregar eventos</h3>
+            <p>{error}</p>
+            <button onClick={getEventos} className="btn btn-primary" style={{ marginTop: '10px' }}>
+              Tentar Novamente
+            </button>
+          </div>
+        )}
+
+        {!loading && !error && eventos.length === 0 && (
           <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
             <span style={{ fontSize: '3rem', display: 'block', marginBottom: '20px' }}>📅</span>
             <h3>Nenhum evento criado ainda</h3>

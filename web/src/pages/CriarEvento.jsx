@@ -21,7 +21,7 @@ const CriarEvento = () => {
   const _dbRecords = useRef(true);
   const [categorias, setCategorias] = useState([]);
 
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
 
   const [formData, setFormData] = useState({
     nome: '',

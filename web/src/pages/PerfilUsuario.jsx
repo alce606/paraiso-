@@ -40,6 +40,31 @@ const PerfilUsuario = () => {
     setEditMode(!editMode);
   };
 
+  const validatePassword = (senha) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(senha);
+    const hasLowerCase = /[a-z]/.test(senha);
+    const hasNumbers = /\d/.test(senha);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
+    
+    if (senha.length < minLength) {
+      return 'A senha deve ter pelo menos 8 caracteres.';
+    }
+    if (!hasUpperCase) {
+      return 'A senha deve conter pelo menos uma letra maiúscula.';
+    }
+    if (!hasLowerCase) {
+      return 'A senha deve conter pelo menos uma letra minúscula.';
+    }
+    if (!hasNumbers) {
+      return 'A senha deve conter pelo menos um número.';
+    }
+    if (!hasSpecialChar) {
+      return 'A senha deve conter pelo menos um caractere especial (!@#$%^&*(),.?":{}|<>).';
+    }
+    return null;
+  };
+
   const validateForm = () => {
     const newErrors = {};
     
@@ -50,8 +75,11 @@ const PerfilUsuario = () => {
     if (alterarSenha) {
       if (!novaSenha) {
         newErrors.novaSenha = 'Nova senha é obrigatória';
-      } else if (novaSenha.length < 6) {
-        newErrors.novaSenha = 'A senha deve ter pelo menos 6 caracteres';
+      } else {
+        const passwordError = validatePassword(novaSenha);
+        if (passwordError) {
+          newErrors.novaSenha = passwordError;
+        }
       }
     }
     
@@ -71,6 +99,10 @@ const PerfilUsuario = () => {
       if (alterarSenha && novaSenha) {
         await UsuarioService.alterarSenha(currentUser.id, { senha: novaSenha });
       }
+      
+      // Atualiza o localStorage com os novos dados
+      const updatedUser = { ...currentUser, nome: userData.nome, email: userData.email };
+      UsuarioService.updateCurrentUser(updatedUser);
       
       setEditMode(false);
       alert('Perfil atualizado com sucesso!');
@@ -205,6 +237,9 @@ const PerfilUsuario = () => {
                       border: `1px solid ${errors.novaSenha ? '#dc3545' : '#ddd'}`
                     }}
                   />
+                  <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                    Mínimo 8 caracteres, incluindo: maiúscula, minúscula, número e caractere especial
+                  </small>
                   {errors.novaSenha && (
                     <div style={{ color: '#dc3545', fontSize: '14px', marginTop: '5px' }}>
                       {errors.novaSenha}

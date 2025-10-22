@@ -17,6 +17,31 @@ const EditarUsuario = () => {
   const [novaSenha, setNovaSenha] = useState('');
   const [alterarSenha, setAlterarSenha] = useState(false);
 
+  const validatePassword = (senha) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(senha);
+    const hasLowerCase = /[a-z]/.test(senha);
+    const hasNumbers = /\d/.test(senha);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
+    
+    if (senha.length < minLength) {
+      return 'A senha deve ter pelo menos 8 caracteres.';
+    }
+    if (!hasUpperCase) {
+      return 'A senha deve conter pelo menos uma letra maiúscula.';
+    }
+    if (!hasLowerCase) {
+      return 'A senha deve conter pelo menos uma letra minúscula.';
+    }
+    if (!hasNumbers) {
+      return 'A senha deve conter pelo menos um número.';
+    }
+    if (!hasSpecialChar) {
+      return 'A senha deve conter pelo menos um caractere especial (!@#$%^&*(),.?":{}|<>).';
+    }
+    return null;
+  };
+
   useEffect(() => {
     carregarUsuario();
   }, [id]);
@@ -39,6 +64,8 @@ const EditarUsuario = () => {
     }
   };
 
+
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -52,10 +79,27 @@ const EditarUsuario = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.nome.trim()) {
+      alert('Nome é obrigatório');
+      return;
+    }
+    
+    if (alterarSenha) {
+      if (!novaSenha.trim()) {
+        alert('Nova senha é obrigatória');
+        return;
+      }
+      
+      const passwordError = validatePassword(novaSenha);
+      if (passwordError) {
+        alert(passwordError);
+        return;
+      }
+    }
+    
     try {
-      const dataToSend = { 
-        ...formData
-      };
+      const dataToSend = { ...formData };
       if (foto) {
         dataToSend.foto = foto;
       }
@@ -69,8 +113,8 @@ const EditarUsuario = () => {
       alert('Usuário alterado com sucesso!');
       navigate('/admin/usuarios');
     } catch (error) {
-      console.error('Erro ao alterar usuário:', error);
-      alert('Erro ao alterar usuário');
+      console.error('Erro:', error);
+      alert(error.response?.data?.message || 'Erro ao alterar usuário');
     }
   };
 
@@ -120,9 +164,9 @@ const EditarUsuario = () => {
                 type="email"
                 name="email"
                 value={formData.email}
-                onChange={handleChange}
                 placeholder="email@exemplo.com"
-                required
+                disabled
+                style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
               />
             </div>
 
@@ -184,6 +228,9 @@ const EditarUsuario = () => {
                   placeholder="Digite a nova senha"
                   required={alterarSenha}
                 />
+                <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                  Mínimo 8 caracteres, incluindo: maiúscula, minúscula, número e caractere especial
+                </small>
               </div>
             )}
 
@@ -211,6 +258,8 @@ const EditarUsuario = () => {
                 Cancelar
               </button>
             </div>
+            
+
           </form>
         </div>
       </div>

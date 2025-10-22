@@ -22,7 +22,9 @@ const create_ = (data) => {
 const create = (file, formData, usuario) => {
   const data = new FormData();
 
-  data.append("file", file);
+  if (file) {
+    data.append("file", file);
+  }
   data.append("nome", formData.nome);
   data.append("descricao", formData.descricao);
   data.append("localEvento", formData.localEvento);
@@ -43,7 +45,9 @@ const create = (file, formData, usuario) => {
 const alterar = (file, id, data) => {
   const formData = new FormData();
 
-  formData.append('file', file);
+  if (file) {
+    formData.append('file', file);
+  }
   formData.append('nome', data.nome);
   formData.append('descricao', data.descricao);
   formData.append("localEvento", data.localEvento);

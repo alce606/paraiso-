@@ -7,19 +7,37 @@ const ImageUploader = ({ setFile }) => {
 
     const selectFile = (event) => {
         const file = event.target.files[0];
-        const preview = URL.createObjectURL(file);
-        setCurrentFile(file);
-        setPreviewImage(preview);
+        
+        if (file) {
+            // Limitar tamanho do arquivo a 1MB
+            const maxSize = 1 * 1024 * 1024; // 1MB em bytes
+            
+            if (file.size > maxSize) {
+                alert('Arquivo muito grande! Máximo permitido: 1MB');
+                event.target.value = '';
+                return;
+            }
+            
+            const preview = URL.createObjectURL(file);
+            setCurrentFile(file);
+            setPreviewImage(preview);
+        }
+    };
+
+    const deleteFile = () => {
+        setCurrentFile(null);
+        setPreviewImage(null);
+        setFile(null);
+        // Limpa o input file
+        const fileInput = document.getElementById('uploadImage');
+        if (fileInput) {
+            fileInput.value = '';
+        }
     };
 
     useEffect(() => {
         setFile(currentFile);
-    }, [currentFile]);
-
-    const deleteFile = () => {
-        setCurrentFile(undefined);
-        setPreviewImage(undefined);
-    };
+    }, [currentFile, setFile]);
 
     return (
         <div className="img-card">
